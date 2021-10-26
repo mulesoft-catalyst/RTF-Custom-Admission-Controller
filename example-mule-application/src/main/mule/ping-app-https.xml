@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:rtf-secure-file-provider="http://www.mulesoft.org/schema/mule/rtf-secure-file-provider" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:tls="http://www.mulesoft.org/schema/mule/tls"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/tls http://www.mulesoft.org/schema/mule/tls/current/mule-tls.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/rtf-secure-file-provider http://www.mulesoft.org/schema/mule/rtf-secure-file-provider/current/mule-rtf-secure-file-provider.xsd">
+	<tls:context name="TLS_Context" doc:name="TLS Context" doc:id="752a3acf-ecd2-4016-b6ab-fccfda34d542" >
+		<tls:key-store type="pkcs12" path="${APP_DATA}/Cert.p12" password="mulesoft" keyPassword="mulesoft"/>
+	</tls:context>
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="4d74f30e-0811-459e-83c1-6de48950c39a" basePath="${app.name}">
+		<http:listener-connection protocol="HTTPS" host="0.0.0.0" port="8081" tlsContext="TLS_Context" />
+	</http:listener-config>
+	<configuration-properties doc:name="Configuration properties" doc:id="8ade2a5a-7c23-46d7-96d4-818b88fac343" file="${APP_DATA}/ping-app.properties" />
+	<flow name="ping-app-httpsFlow" doc:id="8da67c3d-da45-467c-aff7-f72a0c885869" >
+		<http:listener doc:name="Listener" doc:id="63e93dfd-b679-4402-87ae-2c2df104d8f1" config-ref="HTTP_Listener_config" path="/api/ping"/>
+		<set-variable value="${color}" doc:name="Set Variable" doc:id="079c4987-6191-4cec-97c0-ba037c2d9217" variableName="color"/>
+		<set-variable value="${mule.home}" doc:name="Set Variable" doc:id="f4cfd093-1c94-4971-b139-3b301ab3018a" variableName="muleHome"/>
+		<ee:transform doc:name="Transform Message" doc:id="418dccb3-6b3c-4e7b-835a-ea2e4f20502f" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	server:	server.host,
+	color: vars.color,
+	home: vars.muleHome,
+	timestamp: now(),
+	headers: message.attributes.headers
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="Logger" doc:id="95889dd9-0286-48d2-ae12-866af30aaa25" message="payload :: #[payload]"/>
+	</flow>
+</mule>

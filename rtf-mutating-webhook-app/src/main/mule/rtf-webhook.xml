@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:tls="http://www.mulesoft.org/schema/mule/tls"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/tls http://www.mulesoft.org/schema/mule/tls/current/mule-tls.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<tls:context name="TLS_Context" doc:name="TLS Context" doc:id="f23bc642-94af-4a5e-bada-e5f38856a542" >
+		<tls:key-store type="pkcs12" path="keystore.p12" keyPassword="password123" password="password123" />
+	</tls:context>
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="f119d4cf-427c-433e-b46c-017fcef4506e" >
+		<http:listener-connection host="0.0.0.0" port="8081" tlsContext="TLS_Context" protocol="HTTPS"/>
+	</http:listener-config>
+	<flow name="rtf-webhookFlow" doc:id="8d430403-8f12-4237-844b-74ec9e422650" >
+		<http:listener doc:name="Listener" doc:id="31fdd3c3-6d19-48cc-b820-84e457741d8a" config-ref="HTTP_Listener_config" path="/mutate"/>
+		<logger level="INFO" doc:name="Logger" doc:id="69a0906c-dcdc-421f-88f7-3d9f7d529b28" message="Received request on webhook"/>
+		<ee:transform doc:name="Transform Message" doc:id="0833e52e-37f4-416f-8625-735fe531d22d" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json skipNullOn="everywhere"
+import * from dw::core::Arrays
+import * from dw::core::Binaries
+
+var index = payload.request.object.spec.template.spec.containers indexWhere ((item) -> item.name == "app")
+---
+{
+   apiVersion: payload.apiVersion,
+   kind: payload.kind,
+   response: {
+       uid: payload.request.uid,
+       "allowed": true,
+        "patchType": if(index >=0) "JSONPatch" else null,
+        "patch": if(index >=0) toBase64("[{\"op\": \"add\", \"path\":\"/spec/template/spec/volumes/-\",\"value\": { \"name\": \"rtf-pv\", \"persistentVolumeClaim\": {\"claimName\": \"rtf-pvc\"} }},{\"op\": \"add\", \"path\": \"/spec/template/spec/containers/" ++ index ++ "/volumeMounts/-\", \"value\": { \"mountPath\": \"/opt/mule/appdata\", \"name\": \"rtf-pv\" }},{\"op\": \"add\", \"path\": \"/spec/template/spec/containers/" ++ index ++ "/env/-\", \"value\": { \"value\": \"/opt/mule/appdata\", \"name\": \"APP_DATA\" }}]") else null,
+   }
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+	<flow name="rtf-webhookFlow1" doc:id="2c8afd1f-31e0-4eab-a224-d9b62cd0644c" >
+		<http:listener doc:name="Listener" doc:id="2dc27173-2b39-4ced-9f50-11fdaa586cdc" config-ref="HTTP_Listener_config" path="/"/>
+		<logger level="INFO" doc:name="Logger" doc:id="86ab37ed-0008-446d-bdc8-a20d9f08ee50" message="received on / #[payload]"/>
+		<ee:transform doc:name="Transform Message" doc:id="49a36ab4-7e7d-4d13-be30-f98496550f14" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+"ok"]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+</mule>
