@@ -124,6 +124,8 @@ webhooks:
     matchPolicy: Equivalent
     namespaceSelector:
     objectSelector:
+      matchLabels:
+        type: MuleApplication
     clientConfig:
       caBundle: ${CA Bundle}
       service:
