@@ -1,0 +1,571 @@
+{
+  "apiVersion": "admission.k8s.io/v1",
+  "kind": "AdmissionReview",
+  "request": {
+
+    "uid": "705ab4f5-6393-11e8-b7cc-42010a800002",
+
+
+    "kind": {"group":"autoscaling","version":"v1","kind":"Scale"},
+
+    "resource": {"group":"apps","version":"v1","resource":"deployments"},
+
+    "subResource": "scale",
+
+
+    "requestKind": {"group":"autoscaling","version":"v1","kind":"Scale"},
+
+    "requestResource": {"group":"apps","version":"v1","resource":"deployments"},
+
+    "requestSubResource": "scale",
+
+
+    "name": "my-deployment",
+
+    "namespace": "my-namespace",
+
+
+    "operation": "UPDATE",
+
+    "userInfo": {
+
+      "username": "admin",
+
+      "uid": "014fbff9a07c",
+
+      "groups": ["system:authenticated","my-admin-group"],
+
+      "extra": {
+        "some-key":["some-value1", "some-value2"]
+      }
+    },
+
+
+    "object": {
+    "apiVersion": "apps/v1",
+    "kind": "Deployment",
+    "metadata": {
+        "annotations": {
+            "deployment.kubernetes.io/revision": "1",
+            "desiredStatus": "STARTED",
+            "rtf.mulesoft.com/last-publish-hash": "e226953a5a8f28d47ae95df3c03c1e28",
+            "rtf.mulesoft.com/replicas": "1",
+            "rtf.mulesoft.com/version": "3651d309-e02f-4dbd-aefb-337ab2b7c877"
+        },
+        "creationTimestamp": "2021-09-29T20:34:56Z",
+        "generation": 3,
+        "labels": {
+            "environment": "31ce1ad1-2018-4159-9749-e0decade32b6",
+            "organization": "2f8f474d-8ed3-4471-b13c-21fcb674aee6",
+            "rtf.mulesoft.com/id": "0ae2ede0-11bb-4a2c-a147-fdf8d4560bc8",
+            "rtf.mulesoft.com/status": "READY",
+            "rtf.mulesoft.com/version": "3651d309-e02f-4dbd-aefb-337ab2b7c877",
+            "type": "MuleApplication"
+        },
+
+        "name": "ping-app-https",
+        "namespace": "31ce1ad1-2018-4159-9749-e0decade32b6",
+        "resourceVersion": "118701972",
+        "selfLink": "/apis/apps/v1/namespaces/31ce1ad1-2018-4159-9749-e0decade32b6/deployments/ping-app-https",
+        "uid": "02e697b8-a817-4e07-be9c-a80a1158d62c"
+    },
+    "spec": {
+        "progressDeadlineSeconds": 720,
+        "replicas": 1,
+        "revisionHistoryLimit": 1,
+        "selector": {
+            "matchLabels": {
+                "rtf.mulesoft.com/id": "0ae2ede0-11bb-4a2c-a147-fdf8d4560bc8"
+            }
+        },
+        "strategy": {
+            "rollingUpdate": {
+                "maxSurge": 1,
+                "maxUnavailable": 0
+            },
+            "type": "RollingUpdate"
+        },
+        "template": {
+            "metadata": {
+                "annotations": {
+                    "mulesoft.com/resources": "[{\"destinationFile\":\"/opt/mule/apps/ping-app-https.jar\",\"url\":\"https://configuration-resolver.prod.cloudhub.io/api/v1/deployments/0ae2ede0-11bb-4a2c-a147-fdf8d4560bc8/assets/eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIzYjk5MWNjYy01MDFhLTQ4YTYtYWM4Yi03YjAwZTk3YjBkMjMuTUMudXMtZWFzdC0xIiwiZ3JvdXBJZCI6IjJmOGY0NzRkLThlZDMtNDQ3MS1iMTNjLTIxZmNiNjc0YWVlNiIsImlzcyI6Ik11bGVTb2Z0IC0gQU1DIC0gRGVwbG95ZXIiLCJjbGFzc2lmaWVyIjoibXVsZS1hcHBsaWNhdGlvbiIsImFydGlmYWN0SWQiOiJwaW5nLWFwcC1odHRwcyIsInBhY2thZ2luZyI6ImphciIsImV4Y2hhbmdlVHlwZSI6ImFwcCIsImRlcGxveW1lbnROYW1lIjoicGluZy1hcHAtaHR0cHMiLCJzb3VyY2UiOiJleGNoYW5nZSIsInJlZklkIjoicGluZy1hcHAtaHR0cHMiLCJ2ZXJzaW9uIjoiMS4wLjUifQ.UCVLMKP5Gt5qMkONMzM8FQnXXySYZhMibKMjw6fWAmqSCGU9NxUWFHJhSFZBxWd-Izhg-e7KwbvqMp7QASEc8G2sYBy5uyYXy00lkv-l_1_Ic9_fxVwFzRdsaeZlQAD-agK1CLA4LOnUp3vgR6NwVLO5VoqYlYQkS2JbHmYH4xl4yJ-XLqSbszrIXhgyOLRE732hI2bRuGBJyWj4Vvzkw0nMvMnyECIaKAPO9DBg-e2Sn9MsGACfXNJ60D1dkDBbby9NHiwvJJhvaZ2pWjZdmOVAUiEz4WIVy05TktorGC1wxNi-iv_gD3ePMGAFwa0AV14aQ2_PVu-rC63TQLpFTQ\"},{\"destinationFile\":\"/opt/mule/conf/ping-app-https.yml\",\"url\":\"https://configuration-resolver.prod.cloudhub.io/api/v1/deployments/0ae2ede0-11bb-4a2c-a147-fdf8d4560bc8/configurations/eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIzYjk5MWNjYy01MDFhLTQ4YTYtYWM4Yi03YjAwZTk3YjBkMjMuTUMudXMtZWFzdC0xIiwiaXNzIjoiTXVsZVNvZnQgLSBBTUMgLSBEZXBsb3llciIsImRlcGxveW1lbnROYW1lIjoicGluZy1hcHAtaHR0cHMiLCJzb3VyY2UiOiJkZXBsb3llciIsInR5cGUiOiJjb25maWd1cmF0aW9uIiwidmVyc2lvbiI6IjM2NTFkMzA5LWUwMmYtNGRiZC1hZWZiLTMzN2FiMmI3Yzg3NyJ9.H28RpuuAS4Ragyw5BB1sT595VeumnB7yMTkMjmo824F20uRaPwXoJoWupyT8AFhwbbPNGdax9JG-_3yTQn_Ip9vTUyF4QS2q-fzEy_x80KUo0xGBTWYAU7T-my1ziU6nsAyXeoPsrUqHOHTt93TwqyVkvQro8QghGUvxuB9EH3nkT9feKCtVA0IvVpA5PwvylXU_3mfkQIrjLnpEf_xbieWwWV3inI2Z96rEMIVKAVXLALxMJQ35hzsyE7x0zOJgbjI476rPUZUjFb0lg-tPmcLXsbdvLfTFAFIiHpgJMELQnJ6xY4iEh5Q1FHCCzdgdZZDTczHWiygqvcTk4R5thw\",\"accept\":\"application/x-yaml\"}]"
+                },
+                "creationTimestamp": null,
+                "labels": {
+                    "am-org-id": "7ad8e1d5-630e-4084-9e4d-32fdae146b8e",
+                    "app": "ping-app-https",
+                    "environment": "31ce1ad1-2018-4159-9749-e0decade32b6",
+                    "master-org-id": "7ad8e1d5-630e-4084-9e4d-32fdae146b8e",
+                    "organization": "2f8f474d-8ed3-4471-b13c-21fcb674aee6",
+                    "rtf.mulesoft.com/generation": "82e593342bd4006911d741e8f39cdfb9",
+                    "rtf.mulesoft.com/id": "0ae2ede0-11bb-4a2c-a147-fdf8d4560bc8",
+                    "type": "MuleApplication"
+                },
+                "name": "ping-app-https"
+            },
+            "spec": {
+                "affinity": {
+                    "podAntiAffinity": {
+                        "preferredDuringSchedulingIgnoredDuringExecution": [
+                            {
+                                "podAffinityTerm": {
+                                    "labelSelector": {
+                                        "matchExpressions": [
+                                            {
+                                                "key": "rtf.mulesoft.com/id",
+                                                "operator": "In",
+                                                "values": [
+                                                    "0ae2ede0-11bb-4a2c-a147-fdf8d4560bc8"
+                                                ]
+                                            },
+                                            {
+                                                "key": "rtf.mulesoft.com/generation",
+                                                "operator": "In",
+                                                "values": [
+                                                    "82e593342bd4006911d741e8f39cdfb9"
+                                                ]
+                                            }
+                                        ]
+                                    },
+                                    "topologyKey": "kubernetes.io/hostname"
+                                },
+                                "weight": 100
+                            }
+                        ]
+                    }
+                },
+                "automountServiceAccountToken": false,
+                "containers": [
+                    {
+                        "env": [
+                            {
+                                "name": "APP_NAME",
+                                "value": "ping-app-https"
+                            },
+                            {
+                                "name": "TARGET_ID",
+                                "value": "3b991ccc-501a-48a6-ac8b-7b00e97b0d23"
+                            },
+                            {
+                                "name": "RTF_ID",
+                                "value": "3b991ccc-501a-48a6-ac8b-7b00e97b0d23"
+                            },
+                            {
+                                "name": "CONF_PATH",
+                                "value": "/opt/mule/conf/ping-app-https.yml"
+                            },
+                            {
+                                "name": "POD_CPU_REQUEST",
+                                "value": "20m"
+                            },
+                            {
+                                "name": "POD_CPU_LIMIT",
+                                "value": "1900m"
+                            },
+                            {
+                                "name": "POD_MEM_REQUEST",
+                                "value": "700Mi"
+                            },
+                            {
+                                "name": "POD_MEM_LIMIT",
+                                "value": "700Mi"
+                            },
+                            {
+                                "name": "NAMESPACE_NAME",
+                                "valueFrom": {
+                                    "fieldRef": {
+                                        "apiVersion": "v1",
+                                        "fieldPath": "metadata.namespace"
+                                    }
+                                }
+                            },
+                            {
+                                "name": "MASTER_ORG_ID",
+                                "valueFrom": {
+                                    "fieldRef": {
+                                        "apiVersion": "v1",
+                                        "fieldPath": "metadata.labels['master-org-id']"
+                                    }
+                                }
+                            },
+                            {
+                                "name": "POD_NAME",
+                                "valueFrom": {
+                                    "fieldRef": {
+                                        "apiVersion": "v1",
+                                        "fieldPath": "metadata.name"
+                                    }
+                                }
+                            },
+                            {
+                                "name": "ORG_ID",
+                                "valueFrom": {
+                                    "fieldRef": {
+                                        "apiVersion": "v1",
+                                        "fieldPath": "metadata.labels['organization']"
+                                    }
+                                }
+                            },
+                            {
+                                "name": "ENV_ID",
+                                "valueFrom": {
+                                    "fieldRef": {
+                                        "apiVersion": "v1",
+                                        "fieldPath": "metadata.labels['environment']"
+                                    }
+                                }
+                            },
+                            {
+                                "name": "NODE_NAME",
+                                "valueFrom": {
+                                    "fieldRef": {
+                                        "apiVersion": "v1",
+                                        "fieldPath": "spec.nodeName"
+                                    }
+                                }
+                            },
+                            {
+                                "name": "MULE_SECURE_PROPERTIES",
+                                "valueFrom": {
+                                    "secretKeyRef": {
+                                        "key": "properties",
+                                        "name": "secure-properties",
+                                        "optional": true
+                                    }
+                                }
+                            },
+                            {
+                                "name": "INFLUX_PUBLISH_HEAP_METRICS_DISABLED",
+                                "value": "true"
+                            },
+                            {
+                                "name": "USE_PROXY_PROPERTIES",
+                                "value": "false"
+                            }
+                        ],
+                        "envFrom": [
+                            {
+                                "secretRef": {
+                                    "name": "custom-properties",
+                                    "optional": true
+                                }
+                            },
+                            {
+                                "secretRef": {
+                                    "name": "env-0ae2ede0-11bb-4a2c-a147-fdf8d4560bc8",
+                                    "optional": true
+                                }
+                            }
+                        ],
+                        "image": "rtf-runtime-registry.kprod.msap.io/mulesoft/poseidon-runtime-4.3.0:20210823-4",
+                        "imagePullPolicy": "IfNotPresent",
+                        "lifecycle": {
+                            "preStop": {
+                                "exec": {
+                                    "command": [
+                                        "sh",
+                                        "-c",
+                                        "sleep 5"
+                                    ]
+                                }
+                            }
+                        },
+                        "name": "app",
+                        "ports": [
+                            {
+                                "containerPort": 8081,
+                                "name": "http",
+                                "protocol": "TCP"
+                            },
+                            {
+                                "containerPort": 8082,
+                                "name": "https",
+                                "protocol": "TCP"
+                            },
+                            {
+                                "containerPort": 5701,
+                                "name": "hazelcast",
+                                "protocol": "TCP"
+                            }
+                        ],
+                        "readinessProbe": {
+                            "exec": {
+                                "command": [
+                                    "/readiness-probe.sh"
+                                ]
+                            },
+                            "failureThreshold": 3,
+                            "initialDelaySeconds": 10,
+                            "periodSeconds": 5,
+                            "successThreshold": 1,
+                            "timeoutSeconds": 5
+                        },
+                        "resources": {
+                            "limits": {
+                                "cpu": "1900m",
+                                "memory": "700Mi"
+                            },
+                            "requests": {
+                                "cpu": "20m",
+                                "memory": "700Mi"
+                            }
+                        },
+                        "securityContext": {
+                            "readOnlyRootFilesystem": true,
+                            "runAsUser": 2020
+                        },
+                        "terminationMessagePath": "/dev/termination-log",
+                        "terminationMessagePolicy": "File",
+                        "volumeMounts": [
+                            {
+                                "mountPath": "/mnt/overlay",
+                                "name": "overlay"
+                            },
+                            {
+                                "mountPath": "/tmp",
+                                "name": "tmp"
+                            },
+                            {
+                                "mountPath": "/license",
+                                "name": "mulelicense",
+                                "readOnly": true
+                            }
+                        ]
+                    },
+                    {
+                        "env": [
+                            {
+                                "name": "APP_NAME",
+                                "value": "ping-app-https"
+                            },
+                            {
+                                "name": "NAMESPACE_NAME",
+                                "valueFrom": {
+                                    "fieldRef": {
+                                        "apiVersion": "v1",
+                                        "fieldPath": "metadata.namespace"
+                                    }
+                                }
+                            },
+                            {
+                                "name": "MASTER_ORG_ID",
+                                "valueFrom": {
+                                    "fieldRef": {
+                                        "apiVersion": "v1",
+                                        "fieldPath": "metadata.labels['master-org-id']"
+                                    }
+                                }
+                            },
+                            {
+                                "name": "POD_NAME",
+                                "valueFrom": {
+                                    "fieldRef": {
+                                        "apiVersion": "v1",
+                                        "fieldPath": "metadata.name"
+                                    }
+                                }
+                            },
+                            {
+                                "name": "ORG_ID",
+                                "valueFrom": {
+                                    "fieldRef": {
+                                        "apiVersion": "v1",
+                                        "fieldPath": "metadata.labels['organization']"
+                                    }
+                                }
+                            },
+                            {
+                                "name": "ENV_ID",
+                                "valueFrom": {
+                                    "fieldRef": {
+                                        "apiVersion": "v1",
+                                        "fieldPath": "metadata.labels['environment']"
+                                    }
+                                }
+                            },
+                            {
+                                "name": "NODE_NAME",
+                                "valueFrom": {
+                                    "fieldRef": {
+                                        "apiVersion": "v1",
+                                        "fieldPath": "spec.nodeName"
+                                    }
+                                }
+                            },
+                            {
+                                "name": "LOG_LOCATION",
+                                "value": "/mnt/overlay/opt/mule/logs/_*metric.log"
+                            },
+                            {
+                                "name": "DATA_PATH",
+                                "value": "/mnt/overlay/am-data"
+                            },
+                            {
+                                "name": "PROXY_URL",
+                                "valueFrom": {
+                                    "secretKeyRef": {
+                                        "key": "MONITORING_PROXY",
+                                        "name": "custom-properties",
+                                        "optional": true
+                                    }
+                                }
+                            },
+                            {
+                                "name": "INGEST_HOST",
+                                "value": "dias-ingestor-router.us-east-1.prod.cloudhub.io:443"
+                            },
+                            {
+                                "name": "INGEST_HOST_LEGACY",
+                                "value": "dias-ingestor-nginx.prod.cloudhub.io:5044"
+                            }
+                        ],
+                        "image": "rtf-runtime-registry.kprod.msap.io/mulesoft/dias-anypoint-monitoring-sidecar:v1.3.13",
+                        "imagePullPolicy": "IfNotPresent",
+                        "name": "anypoint-monitoring",
+                        "resources": {
+                            "limits": {
+                                "cpu": "50m",
+                                "memory": "70Mi"
+                            },
+                            "requests": {
+                                "cpu": "0",
+                                "memory": "50Mi"
+                            }
+                        },
+                        "securityContext": {
+                            "runAsUser": 2001
+                        },
+                        "terminationMessagePath": "/dev/termination-log",
+                        "terminationMessagePolicy": "FallbackToLogsOnError",
+                        "volumeMounts": [
+                            {
+                                "mountPath": "/mnt/overlay",
+                                "name": "overlay"
+                            },
+                            {
+                                "mountPath": "/data/certs",
+                                "name": "monitoring-certs"
+                            }
+                        ]
+                    }
+                ],
+                "dnsPolicy": "ClusterFirst",
+                "imagePullSecrets": [
+                    {
+                        "name": "rtf-pull-secret"
+                    }
+                ],
+                "initContainers": [
+                    {
+                        "image": "rtf-runtime-registry.kprod.msap.io/mulesoft/rtf-app-init:v1.0.29",
+                        "imagePullPolicy": "IfNotPresent",
+                        "name": "init",
+                        "resources": {},
+                        "securityContext": {
+                            "runAsUser": 2020
+                        },
+                        "terminationMessagePath": "/dev/termination-log",
+                        "terminationMessagePolicy": "File",
+                        "volumeMounts": [
+                            {
+                                "mountPath": "/etc/podinfo",
+                                "name": "podinfo",
+                                "readOnly": true
+                            },
+                            {
+                                "mountPath": "/mnt/overlay",
+                                "name": "overlay"
+                            }
+                        ]
+                    }
+                ],
+                "restartPolicy": "Always",
+                "schedulerName": "default-scheduler",
+                "securityContext": {},
+                "serviceAccount": "ping-app-https",
+                "serviceAccountName": "ping-app-https",
+                "terminationGracePeriodSeconds": 300,
+                "volumes": [
+                    {
+                        "downwardAPI": {
+                            "defaultMode": 420,
+                            "items": [
+                                {
+                                    "fieldRef": {
+                                        "apiVersion": "v1",
+                                        "fieldPath": "metadata.annotations"
+                                    },
+                                    "path": "annotations"
+                                }
+                            ]
+                        },
+                        "name": "podinfo"
+                    },
+                    {
+                        "emptyDir": {},
+                        "name": "overlay"
+                    },
+                    {
+                        "emptyDir": {},
+                        "name": "tmp"
+                    },
+                    {
+                        "name": "mulelicense",
+                        "secret": {
+                            "defaultMode": 420,
+                            "items": [
+                                {
+                                    "key": "4",
+                                    "path": "muleLicenseKey.lic"
+                                }
+                            ],
+                            "secretName": "rtf-muleruntime-license"
+                        }
+                    },
+                    {
+                        "name": "monitoring-certs",
+                        "secret": {
+                            "defaultMode": 420,
+                            "optional": true,
+                            "secretName": "rtf-monitoring-certificate"
+                        }
+                    }
+                ]
+            }
+        }
+    },
+    "status": {
+        "availableReplicas": 1,
+        "conditions": [
+            {
+                "lastTransitionTime": "2021-09-29T20:35:34Z",
+                "lastUpdateTime": "2021-09-29T20:35:34Z",
+                "message": "Deployment has minimum availability.",
+                "reason": "MinimumReplicasAvailable",
+                "status": "True",
+                "type": "Available"
+            },
+            {
+                "lastTransitionTime": "2021-09-29T20:34:56Z",
+                "lastUpdateTime": "2021-09-29T20:35:34Z",
+                "message": "ReplicaSet \"ping-app-https-54f4c4b4f4\" has successfully progressed.",
+                "reason": "NewReplicaSetAvailable",
+                "status": "True",
+                "type": "Progressing"
+            }
+        ],
+        "observedGeneration": 3,
+        "readyReplicas": 1,
+        "replicas": 1,
+        "updatedReplicas": 1
+    }
+}
+,
+
+    "oldObject": {"apiVersion":"autoscaling/v1","kind":"Scale"},
+
+    "options": {"apiVersion":"meta.k8s.io/v1","kind":"UpdateOptions"},
+
+    "dryRun": false
+  }
+}
