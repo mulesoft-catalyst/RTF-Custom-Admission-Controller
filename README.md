@@ -2,14 +2,24 @@
 
 ## Introduction
 
-This is a kubernetes custom admission controller written in Mule that can modify the RTF application deployments before they are created. We are using this to inject a peristent volume claim to the deployment. This can be used to provide RTF applications access to external storage for loading certificates, files etc.
+This is a kubernetes custom admission controller written in Mule that can modify the RTF application deployments before they are created. We are using this to:
+* inject a peristent volume claim to the deployment. This can be used to provide RTF applications access to external storage for loading certificates, files etc.
+* add custom labels to the deployment
 
+Below a picture that illustrates the webhook process, the same can be applied for adding a persistent volume as well as custom labels to the deployments.
 
 ![WebHook (1)](https://user-images.githubusercontent.com/36458155/135758609-4eaa18d6-2947-44d0-aa72-2846fd2aea92.jpeg)
 
+## Git Repository content
+
+This Git repository contains the following:
+* **rtf-mutating-webhook-app** The mule application webhook to add persitent volume to deployments
+* **rtf-mutating-webhook-labels** The mule application webhook to add custom labels to deployments
+* **example-mule-application** An "Hello World" Mule application to test the correct execution of the webhook
+
 ## Installation Steps
 
-### Create Persistent Volume (PV)
+### Steps to Create Persistent Volume (PV)
 
 Persistent volumes (PV) are not namespace bound, but Persistent Volume Claims (PVC) are. There is a one to one relationship between PVC and PV. So depeneding on the number of namespaces (RTF environments) you have in a cluster, you will need that many PV.
 
@@ -74,7 +84,7 @@ Create PVC by running
 +We only have to deploy one admission controller per cluster. This webhook is developed in Mule and is to be deployed through ARM. So choose one environment in the cluster where this application will be deployed.
 ```
 
-#### Create TLS certificates for the webhook ####
+### Create TLS certificates for the webhook ###
 Webhook is called by kube-api server using TLS. We need to generate TLS certificates for the https listener. This certificate is to be signed by the cluster CA.
 Please use the below script to generate the TLS key and certificate.
 
@@ -87,19 +97,20 @@ copy [ssl.sh](ssl.sh) and run it as
 ./ssl.sh rtf-webhook 31ce1ad1-2018-4159-9749-e0decade32b6
 ```
 
-This will create files called **rtf-webhook.key** and **rtf-webhook.pem**
+This will create files called **rtf-webhook.key** and **rtf-webhook.crt**
 
 Convert the above files to pkcs12 format
 
 ```
-openssl pkcs12 -export -in rtf-webhook.pem -inkey rtf-webhook.key -name 'rtfcert' -out keystore.p12
+openssl pkcs12 -export -in rtf-webhook.crt -inkey rtf-webhook.key -name 'rtfcert' -out keystore.p12
 ```
 In the rtf-webhook mule application use this certificate for TLS context in the https listener. 
-
 
 #### Deploy WebHook Mule Application ####
 
 After updating the tls certificate deploy the *rtf-webhook-mule* application to your cluster to the environment that you chose while creating TLS certificate.
+In case you have to dadd a persistent volume you are going to deploy the rtf-mutating-webhook-app Mule project as rtf-webhook application in RTF
+In case you have to dadd custom labels you are going to deploy the rtf-mutating-webhook-labels Mule project as rtf-webhook application in RTF
 
 ### Create Mutating Admission Controller ###
 
@@ -109,10 +120,10 @@ Get the CA bundle from cluster by running below script
 kubectl config view --raw --minify --flatten -o jsonpath='{.clusters[].cluster.certificate-authority-data}'
 ```
 
-Create the below yaml as mutatewebhook.yaml and replace ${CA Bundle} with the output from above command.
+Create the below yaml as mutatewebhook.yaml and replace ${CA_Bundle} with the output from above command.
 
 ```
-apiVersion: admissionregistration.k8s.io/v1beta1
+apiVersion: admissionregistration.k8s.io/v1
 kind: MutatingWebhookConfiguration
 metadata:
   name: rtfwebhookmutate
@@ -127,7 +138,7 @@ webhooks:
       matchLabels:
         type: MuleApplication
     clientConfig:
-      caBundle: ${CA Bundle}
+      caBundle: ${CA_Bundle}
       service:
         namespace: 31ce1ad1-2018-4159-9749-e0decade32b6
         name: rtf-webhook
@@ -135,10 +146,12 @@ webhooks:
         port: 8081
     rules:
       - operations: ["CREATE", "UPDATE"]
-        apiGroups: ["*"]
+        apiGroups: ["apps"]
         apiVersions: ["*"]
         resources: ["deployments"]
         scope: "*"
+    sideEffects: None
+    timeoutSeconds: 10
         
  ```
 
@@ -147,12 +160,16 @@ Create mutating webhook by running
 kubectl apply -f mutatewebhook.yaml
 ```
 
-If you have done all the steps above correctly when you deploy a new Mule application the persistent volume will be injected at the path 
+If you have done all the steps above correctly when you deploy a new Mule application to add persistent volume, the persistent volume will be injected at the path 
 ***/opt/mule/appdata***
 This path is available as an environment variable and Mule apps can refer to it as ${APP_DATA}
 ```
 <tls:key-store type="pkcs12" path="${APP_DATA}/Cert.p12" password="mulesoft" keyPassword="mulesoft"/>
 ```
-
+If you have done all the steps above correctly when you deploy a new Mule application to add custom labels, they will be added to the spec template of each deployment.
+To verify it you can run the kubctl describe pod command. Example:
+```
+kubectl describe pods -n 31ce1ad1-2018-4159-9749-e0decade32b6 hello-world-app-5cb549dbc7-hw6x8
+```
 
 
