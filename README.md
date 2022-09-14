@@ -92,7 +92,7 @@ Please use the below script to generate the TLS key and certificate.
 - The TLS certificates will be created for app-name.namespace.svc. In this example we are using app-name as rtf-webhook. If you change this name, please make sure to change it everywhere.
 - The namespace is the rtf environment in which you choose to deploy this application. This only has to be deployed to one of the environments in the cluster.
 ```
-copy [ssl.sh](ssl.sh) and run it as 
+copy the ssl script to create the certificate. You will copy the ssl_EKS.sh file in case of RTF in EKS and ssl.sh_AKS in case of RTF in AKS and run it. Example:
 ```
 ./ssl.sh rtf-webhook 31ce1ad1-2018-4159-9749-e0decade32b6
 ```
