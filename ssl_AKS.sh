@@ -27,7 +27,7 @@ DNS.4 = ${CSR_NAME}.cluster.local
 EOF
 
 echo "openssl req -new -key ${APP}.key -subj \"/CN=${CSR_NAME}\" -out ${APP}.csr -config csr.conf"
-openssl req -new -key ${APP}.key -subj "/O=system:nodes/CN=system:nodes:${CSR_NAME}" -out ${APP}.csr -config csr.conf
+openssl req -new -key ${APP}.key -subj "/O=system:nodes;/CN=system:node:${CSR_NAME}" -out ${APP}.csr -config csr.conf
 
 echo "... deleting existing csr, if any"
 echo "kubectl delete csr ${CSR_NAME} || :"
